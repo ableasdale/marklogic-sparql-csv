@@ -89,11 +89,23 @@ local:create-bootstrap-page("MarkLogic SPARQL Query to CSV",
                 element div {attribute class {"col-md-8"}, element h2 {"SPARQL Query ", element small {"Editor"}}},
                 element div {attribute class {"col-md-4"}, local:db-chooser-dropdown($CONTENT-SOURCE)}
             },
+            element div {attribute class {"row"},
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="format">Output Format:</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="format">
+                    {
+                    for $x in ("csv", "zip")
+                        return element option {attribute value {$x}, $x}
+                    }
+                    </select>
+                </div>
+            </div>
+            },
+            element hr {},
             element textarea {attribute name {"query"}, attribute id {"data"}, $BASE-QUERY},
             element hr {},
             element button {attribute type {"submit"}, attribute class {"btn btn-primary"},
-            element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (CSV)"} (:," ",
-            element button {attribute type {"button"}, attribute class {"btn btn-primary"},
-            element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (ZIP)"} :)
+            element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute Query and Download File"}
         }
     })
