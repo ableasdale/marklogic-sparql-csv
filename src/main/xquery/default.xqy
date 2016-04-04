@@ -4,6 +4,48 @@ declare variable $BASE-QUERY as xs:string := "# SPARQL Query to be evaluated
 
 SELECT DISTINCT * WHERE {?s ?p ?o} LIMIT 10";
 
+declare variable $TEXTAREA-ELEMENT-ID-NAME as xs:string := "data";
+declare variable $CONTENT-SOURCE as xs:string := xdmp:get-request-field("database", "Documents");
+
+(:
+declare function local:database-select() as element(div) {
+    element div {attribute class {"dropdown"},
+        element button {
+            attribute class {"btn btn-default dropdown-toggle"},
+            attribute type {"button"},
+            attribute id {"database-select"},
+            attribute name {"database"},
+            attribute data-toggle {"dropdown"},
+            attribute aria-haspopup {"true"},
+            attribute aria-expanded {"true"},
+            "Choose database ", element span {attribute class {"caret"}}
+        },
+        element ul {
+            attribute class {"dropdown-menu"}, attribute aria-labelledby {"database-select"},
+            element li {attribute class {"dropdown-header"}, "Available Databases:"},
+            for $x in xdmp:database-name(xdmp:databases())
+            return
+                element li {element a {attribute href {"#"}, $x}}
+        }
+    }
+}; :)
+
+declare function local:db-chooser-dropdown($state as xs:string) {
+    <div class="form-group">
+        <label for="database">Content Source:</label>
+        <select class="form-control" name="database">
+            {
+            for $x in xdmp:database-name(xdmp:databases())
+            return element option {attribute value {$x},
+                if ($state eq $x)
+                then (attribute selected {"selected"})
+                else(),
+            $x}
+            }
+        </select>
+    </div>
+};
+
 declare function local:create-bootstrap-page($title as xs:string, $content as element()){
     element html {attribute lang {"en"},
         element head {
@@ -33,19 +75,21 @@ declare function local:create-bootstrap-page($title as xs:string, $content as el
             <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/codemirror.min.js">{" "}</script>,
             <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/sparql/sparql.min.js">{" "}</script>,
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous">{" "}</script>,
-            <script><![CDATA[{var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("code"), {lineNumbers: true, mode: "application/sparql-query", matchBrackets: true});}]]></script>
+            <script><![CDATA[{var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("data"), {lineNumbers: true, mode: "application/sparql-query", matchBrackets: true});}]]></script>
         }
     }
 };
 
 xdmp:set-response-content-type("text/html; charset=utf-8"),
 '<!DOCTYPE html>',
-local:create-bootstrap-page("bootstrap 101 template",
-    element div {
-        attribute class {"container"},
-        element h2 {"SPARQL Query ", element small {"Editor"}},
-        element form {
-            element textarea {attribute id {"code"}, $BASE-QUERY},
+local:create-bootstrap-page("MarkLogic SPARQL Query to CSV",
+    element div {attribute class {"container"},
+        element form {attribute method {"post"}, attribute action {"/process-query.xqy"}, attribute enctype {"application/x-www-form-urlencoded"},
+            element div {attribute class {"row"},
+                element div {attribute class {"col-md-8"}, element h2 {"SPARQL Query ", element small {"Editor"}}},
+                element div {attribute class {"col-md-4"}, local:db-chooser-dropdown($CONTENT-SOURCE)}
+            },
+            element textarea {attribute name {"query"}, attribute id {"data"}, $BASE-QUERY},
             element hr {},
             element button {attribute type {"submit"}, attribute class {"btn btn-primary"},
             element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (CSV)"} (:," ",
