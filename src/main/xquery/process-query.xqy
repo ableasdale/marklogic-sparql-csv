@@ -1,14 +1,7 @@
 xquery version "1.0-ml";
 
-(:~
-: User: Alex
-: Date: 04/04/2016
-: Time: 16:26
-: To change this template use File | Settings | File Templates.
-:)
-
-declare variable $USERNAME as xs:string := "q";
-declare variable $PASSWORD as xs:string := "q";
+declare variable $USERNAME as xs:string := "username";
+declare variable $PASSWORD as xs:string := "password";
 declare variable $TARGET-DB as xs:string := xdmp:get-request-field("database");
 declare variable $PAYLOAD as xs:string := xdmp:get-request-field("query");
 declare variable $FORMAT as xs:string := xdmp:get-request-field("format");
