@@ -44,10 +44,12 @@ local:create-bootstrap-page("bootstrap 101 template",
     element div {
         attribute class {"container"},
         element h2 {"SPARQL Query ", element small {"Editor"}},
-        element textarea {attribute id {"code"}, $BASE-QUERY},
-        element hr {},
-        element button {attribute type {"button"}, attribute class {"btn btn-primary"},
-        element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (CSV)"}," ",
-        element button {attribute type {"button"}, attribute class {"btn btn-primary"},
-        element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (ZIP)"}
+        element form {
+            element textarea {attribute id {"code"}, $BASE-QUERY},
+            element hr {},
+            element button {attribute type {"submit"}, attribute class {"btn btn-primary"},
+            element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (CSV)"} (:," ",
+            element button {attribute type {"button"}, attribute class {"btn btn-primary"},
+            element span {attribute class {"glyphicon glyphicon-download"}," "}, " Execute and Download (ZIP)"} :)
+        }
     })
