@@ -36,5 +36,10 @@ then (
 else (
     xdmp:set-response-content-type("application/zip"),
     xdmp:add-response-header("Content-Disposition", "attachment; filename=sparql-query.zip"),
-    $POST
+    xdmp:zip-create(
+            <parts xmlns="xdmp:zip">
+                <part>sparql-query.csv</part>
+            </parts>,
+            ($POST)
+    )
 )

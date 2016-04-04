@@ -88,7 +88,7 @@ local:create-bootstrap-page("MarkLogic SPARQL Query to CSV",
             element div {attribute class {"row"},
                 element div {attribute class {"col-md-8"}, element h2 {"SPARQL Query ", element small {"Editor"}}},
                 element div {attribute class {"col-md-4"}, local:db-chooser-dropdown($CONTENT-SOURCE)}
-            },
+            }, 
             element div {attribute class {"row"},
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="format">Output Format:</label>
